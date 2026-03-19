@@ -55,13 +55,15 @@ h1{
 h2 {
     font-size: 48px;
     font-weight: 500;
-    color: var(--medium-grey-color);
+    line-height: 110%;
+    color: var(--color-medium-grey);
 }
 
 p{
     margin: 0;
     padding: 0;
     font-family: "DM Sans", sans-serif;
+    font-size: 1rem;
 }
 
 .ingress-text{
@@ -342,8 +344,33 @@ ul{
 }
 
 
+/*About Us section*/
+.about-us-area{
+    display: flex;
+    padding-left: 300px;
+    padding-right: 300px;
+    padding-top: 115px;
+    gap: 2rem;
+}
+
+.about-us-headline{
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.about-us-text{
+    padding-bottom: 4rem;
+}
 
 
+.about-us-quote {
+    background-color: var(--color-white);
+    padding: 40px 60px;
+    border-radius: 20px;
+    font-family: "DM Sans", sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+}
 
 
 
