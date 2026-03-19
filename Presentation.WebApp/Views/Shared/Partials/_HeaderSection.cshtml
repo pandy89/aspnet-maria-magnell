@@ -1,0 +1,34 @@
+﻿<section class="header-section">
+    <div class="logotype">
+        <a href="/"><img src="~/images/logotype.svg" /></a>
+    </div>
+    <nav class="main-menu">
+        <ul class="menu">
+            <li class="menu-item">
+                <a asp-controller="FitnessCenters" asp-action="Index">Fitness Centers</a>
+            </li>
+            <li class="menu-item">
+                <a asp-controller="Memberships" asp-action="Index">Memberships</a>
+            </li>
+            <li class="menu-item">
+                <a asp-controller="Training" asp-action="Index">Training <i class="bi bi-chevron-down"></i></a>
+            </li>
+            <li class="menu-item">
+                <a asp-controller="CustomerService" asp-action="Index">Customer Service</a>
+            </li>
+            <li class="menu-item">
+                <a asp-controller="Store" asp-action="Index">Store</a>
+            </li>
+        </ul>
+    </nav>
+    <nav class="account-menu">
+        <ul class="menu">
+            <li class="menu-item">
+                <a asp-controller="BecomeMember" asp-action="Index">Become Member</a>
+            </li>            
+        </ul>
+        <div class="sign-in-button">
+            <button class="btn">Sign In<i class="bi bi-chevron-right signinicon"></i></button>
+        </div>
+    </nav>
+</section>
