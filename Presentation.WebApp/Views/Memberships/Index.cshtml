@@ -1,7 +1,78 @@
-﻿@{
-    ViewData["Title"] = "Our Memberships";
-}
+﻿<section class="section__membership">
+    <div class="container">
+        <h2 class="membership-title">Our Memberships Offers</h2>
+        <div class="memberships-card-area">
+                    
+            <div class="membership-card">
+                <div class="membership-card-content">
+                    <div class="membership-card-icon">
+                        <img src="/images/barbell.svg" />
+                    </div>
+                    <h4>Standard Membership</h4>
+                    <hr class="membership-hr" />
+                    <p class="membership-description">With the Standard Membership, get access to our full range of gym facilities.</p>
+                    <ul class="membership-checklist check-list">
+                        <li class="membership-checklist-item">Standard locker</li>
+                        <li class="membership-checklist-item">High-energy group fitness classes</li>
+                        <li class="membership-checklist-item">Motivating & supportive environment</li>
+                    </ul>
+                </div>
+                <div class="membership-price-card">
+                    <div class="membership-price-card-area">
+                        <div class="sl">
+                            <p class="card-price">495.00<span class="card-montly"> / monthly</span></p>
+                            <p class="card-montly-classes">*Monthly 10 Classes</p>
+                        </div>
+                        <div class="sr">
+                            <button>Join Now</button>
+                        </div>
+                    </div>
+                    <hr class="membership-price-hr" />
+                    <p class="card-montly-classes">Try Any Membership Free for 1 week</p>
+                </div>
+            </div>
 
-<div>
-   @ViewData["Title"]
-</div>
+            <div class="membership-card">
+                <div class="membership-card-content">
+                    <div class="membership-card-icon">
+                        <img src="/images/barbell.svg" />
+                    </div>
+                    <h4>Premium Membership</h4>
+                    <hr class="membership-hr" />
+                    <p class="membership-description">With the Premium Membership, get access to our full range of gym facilities.</p>
+                    <ul class="membership-checklist check-list">
+                        <li class="membership-checklist-item">Priority Support & Premium Locker</li>
+                        <li class="membership-checklist-item">High-energy group fitness classes</li>
+                        <li class="membership-checklist-item">Motivating & supportive environment</li>
+                    </ul>
+                </div>
+                <div class="membership-price-card">
+                    <div class="membership-price-card-area">
+                        <div class="sl">
+                            <p class="card-price">595.00<span class="card-montly"> / monthly</span></p>
+                            <p class="card-montly-classes">*Monthly 20 Classes</p>
+                        </div>
+                        <div class="sr">
+                            <button>Join Now</button>
+                        </div>
+                    </div>
+                    <hr class="membership-price-hr" />
+                    <p class="card-montly-classes">Try Any Membership Free for 1 week</p>
+                </div>
+            </div>
+
+            <div class="call-us-today-card">
+                <div class="call-us-today-content">
+                    <p class="call-us-title">Get Your Membership</p>
+                    <p class="call-us-description">Our memberships give you access to all equipment, personalized training.</p>
+                    <hr class="call-us-hr" />
+                    <p class="call-us-number">Call Us At: +(46) 8 410 521 00</p>
+                    <button>Call Us Today!</button>
+                    <img class="call-us-image" src="/images/call-us-today-image.png" alt="A women training at the gym" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<partial name="Partials/Sections/_BenefitsSection" />
+<partial name="Partials/Sections/_FaqSection" />
