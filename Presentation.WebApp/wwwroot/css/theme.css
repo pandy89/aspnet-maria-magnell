@@ -6,47 +6,37 @@
     --light-color: #F7F7F7;
     --white-color: #FFFFFF;
     --black-color: #131020;
-    --danger-color: #E50004;  
-    
+    --danger-color: #E50004;
     --body-background-color: var(--light-color);
-
     --text-color: var(--dark-grey-color);
     --heading-text-color: var(--dark-color);
-
     --hr-color-grey: var(--text-color);
-    --hr-color-green: hsla(67, 82%, 56%, 0.2);  
-
+    --hr-color-light: var(--grey-color);
+    --hr-color-green: hsla(67, 82%, 56%, 0.2);
     --link-color: var(--text-color);
     --link-hover-color: var(--grey-color);
-
     --header-bg-color: var(--black-color);
     --header-text-color: var(--white-color);
-
     --hero-title-color: var(--white-color);
-    
     --menu-item-link-color: var(--white-color);
     --menu-item-link-hover-color: var(--color-primary);
     --menu-item-link-active-color: var(--color-primary);
-
     --footer-bg-color: var(--dark-color);
     --footer-text-color: var(--white-color);
-
     --section-background-color: var(--white-color);
     --section-card-background-color: var(--white-color);
     --section-text-color: var(--dark-color);
-
     --quote-background-color: var(--white-color);
     --quote-text-color: var(--dark-color);
-
     --btn-bg-color: var(--color-primary);
     --btn-text-color: var(--dark-color);
     --btn-border-color: var(--color-primary);
     --btn-bg-hover-color: var(--dark-color);
     --btn-text-hover-color: var(--color-primary);
-
     --badge-bg-color: var(--dark-color);
     --badge-text-color: var(--white-color);
     --badge-dot-color: var(--color-primary);
-
     --brand-bg-color: var(--color-primary);
+    --form-input-bg-color: var(--light-color);
+    --form-input-text-color: #a7a7a7;
 }
