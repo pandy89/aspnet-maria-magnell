@@ -1,5 +1,5 @@
 ﻿
-/* FAQ */
+/* FAQ Accordion */
 const questions = document.querySelectorAll('.question');
 
 questions.forEach((question) =>
@@ -23,19 +23,19 @@ document.addEventListener("DOMContentLoaded", () => {
         toggle.addEventListener("click", (e) => {
             const parent = toggle.closest(".menu-item");
 
-            // Stäng andra öppna dropdowns
+            // Close other open dropdowns
             document.querySelectorAll(".menu-item--open").forEach(item => {
                 if (item !== parent) {
                     item.classList.remove("menu-item--open");
                 }
             });
 
-            // Toggle aktuell
+            // Toggle current
             parent.classList.toggle("menu-item--open");
         });
     });
 
-    // Klick utanför = stäng
+    // Click outside = close
     document.addEventListener("click", (e) => {
         if (!e.target.closest(".menu-item--has-dropdown")) {
             document.querySelectorAll(".menu-item--open").forEach(item => {
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-
+// I got help from chatgpt and i ask for a common mobilemenu.
 // Mobile menu
 document.addEventListener("DOMContentLoaded", () => {
     const button = document.getElementById("mobile-menu-button");
@@ -59,12 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     button.addEventListener("click", toggleMenu);
-
-    // Klick på overlay stänger menyn
-    overlay.addEventListener("click", () => {
-        menu.classList.remove("is-open");
-        overlay.classList.remove("is-open");
-    });
 });
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -84,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// Clone menu
+// Clone menu from desktop to the mobilemenu
 document.addEventListener("DOMContentLoaded", () => {
     const flyout = document.querySelector("#mobile-menu-flyout .mobile-nav");
 
