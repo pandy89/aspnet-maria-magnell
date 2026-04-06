@@ -28,11 +28,18 @@
     --section-text-color: var(--dark-color);
     --quote-background-color: var(--white-color);
     --quote-text-color: var(--dark-color);
-    --btn-bg-color: var(--color-primary);
-    --btn-text-color: var(--dark-color);
-    --btn-border-color: var(--color-primary);
-    --btn-bg-hover-color: var(--dark-color);
-    --btn-text-hover-color: var(--color-primary);
+    /* Primary button */
+    --btn-p-bg-color: var(--color-primary);
+    --btn-p-text-color: var(--dark-color);
+    --btn-p-border-color: var(--color-primary);
+    --btn-p-bg-hover-color: var(--dark-color);
+    --btn-p-text-hover-color: var(--color-primary);
+    /* Secondary button */
+    --btn-s-bg-color: var(--white-color);
+    --btn-s-text-color: var(--dark-color);
+    --btn-s-border-color: var(--white-color);
+    --btn-s-bg-hover-color: var(--dark-color);
+    --btn-s-text-hover-color: var(--white-color);
     --badge-bg-color: var(--dark-color);
     --badge-text-color: var(--white-color);
     --badge-dot-color: var(--color-primary);

@@ -5,19 +5,24 @@
     <nav class="main-menu">
         <ul class="menu">
             <li class="menu-item">
-                <a class="menu-item-link" asp-controller="FitnessCenters" asp-action="Index">Fitness Centers</a>
+                <a class="menu-item-link" asp-controller="NotFoundPage" asp-action="Index">Fitness Centers</a>
             </li>
             <li class="menu-item">
                 <a class="menu-item-link" asp-controller="Memberships" asp-action="Index">Memberships</a>
             </li>
-            <li class="menu-item">
-                <a class="menu-item-link" asp-controller="Training" asp-action="Index">Training</a>
+            <li class="menu-item menu-item--has-dropdown">
+                <a class="menu-item-link dropdown-toggle">Training</a>
+                <ul class="dropdown">
+                    <li class="menu-item"><a asp-controller="NotFoundPage" asp-action="Index" class="menu-item-dropdown-link">Personal Training</a></li>
+                    <li class="menu-item"><a asp-controller="NotFoundPage" asp-action="Index" class="menu-item-dropdown-link">Group Training</a></li>
+                    <li class="menu-item"><a asp-controller="NotFoundPage" asp-action="Index" class="menu-item-dropdown-link">Padel</a></li>
+                </ul>
             </li>
             <li class="menu-item">
                 <a class="menu-item-link" asp-controller="CustomerServices" asp-action="Index">Customer Service</a>
             </li>
             <li class="menu-item">
-                <a class="menu-item-link" asp-controller="Store" asp-action="Index">Store</a>
+                <a class="menu-item-link" asp-controller="NotFoundPage" asp-action="Index">Store</a>
             </li>
         </ul>
     </nav>
@@ -27,9 +32,21 @@
                 <a class="menu-item-link" asp-controller="Authentication" asp-action="SignUp">Become Member</a>
             </li>
             <li class="menu-item">
-                <button class="btn" asp-controller="Authentication" asp-action="SignIn">Sign In</button>
+                <button class="btn btn--primary btn--icon" asp-controller="Authentication" asp-action="SignIn">Sign In</button>
             </li>
         </ul>
     </nav>
-    <button id="mobile-menu-button" data-target="#mobile-menu-flyout" class="mobile-btn"></button>
+    <!-- I got help from ChatGPT to create the mobile navigation -->
+    <button id="mobile-menu-button" data-target="#mobile-menu-flyout" class="btn btn--primary mobile-btn"></button>
+    <div id="mobile-menu-flyout" class="mobile-menu-flyout">
+        <nav class="mobile-nav">
+            <div class="mobile-section"></div>
+            <div class="mobile-section"></div>
+        </nav>
+    </div>
 </section>
+
+
+
+
+    
