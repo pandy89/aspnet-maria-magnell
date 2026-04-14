@@ -10,6 +10,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.5" />
     <PackageReference Include="Microsoft.EntityFrameWorkCore" Version="10.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.5" />
     <PackageReference Include="Microsoft.EntityFrameWorkCore.SqlServer" Version="10.0.5" />
     <PackageReference Include="Microsoft.EntityFrameWorkCore.Tools" Version="10.0.5">
       <PrivateAssets>all</PrivateAssets>
@@ -21,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\" />
     <Folder Include="Persistence\Configurations\" />
-    <Folder Include="Persistence\Repositories\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,11 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.WebApp.Controllers;
 
+[Authorize]
 public class AccountController : Controller
 {
     public IActionResult My()
     {
-        return View();
+
+        var email = User.Identity?.Name ?? string.Empty;
+
+
+        return View("My", email);
     }
 }
