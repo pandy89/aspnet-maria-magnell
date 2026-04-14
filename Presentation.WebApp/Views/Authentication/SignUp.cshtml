@@ -1,0 +1,20 @@
+﻿@using Presentation.WebApp.ViewModels
+@{
+    Layout = "Layouts/_AuthLayout";
+}
+@model SignUpVM
+
+<div>Hej</div>
+
+<form asp-controller="Authentication" asp-action="SignUp" method="post" novalidate>
+
+    <div>
+        <label asp-for="@Model.Form.Email"></label>
+        <input asp-for="@Model.Form.Email" />
+        <span asp-validation-for="@Model.Form.Email"></span>
+    </div>
+
+
+    <button type="submit">Continue</button>
+
+</form>

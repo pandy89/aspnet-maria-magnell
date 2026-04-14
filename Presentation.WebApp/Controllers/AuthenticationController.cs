@@ -1,26 +1,92 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Abstractions.Authentication;
+using Application.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+using Presentation.WebApp.Models;
+using Presentation.WebApp.ViewModels;
 
 namespace Presentation.WebApp.Controllers;
 
-public class AuthenticationController : Controller
+public class AuthenticationController(IMemberService memberService, IAuthService authService) : Controller
 {
+    
+   
+
+
     public IActionResult SignIn()
     {
         return View();
     }
 
-    public IActionResult RegisterEmail()
+    [HttpPost, ValidateAntiForgeryToken]
+    public new async Task<IActionResult> SignOut()
     {
-        return View();
+        await authService.SignOutAsync();
+        return RedirectToAction("Index", "Home");
     }
 
+
+    #region SignUp
+
+    [HttpGet("sign-up")]
+    public IActionResult SignUp()
+    {
+        var vm = new SignUpVM
+        {
+
+        };
+
+        return View(vm);
+    }
+
+    [HttpPost("sign-up"), ValidateAntiForgeryToken]
+    public IActionResult SignUp(SignUpForm form)
+    {
+        if (!ModelState.IsValid)
+            return View(new SignUpVM { Form = form });
+
+        HttpContext.Session.SetString("Auth.SignUp.Email", form.Email);
+
+
+        return RedirectToAction(nameof(RegisterPassword));
+
+        
+    }
+
+    [HttpGet("register-password")]
     public IActionResult RegisterPassword()
     {
+
+
         return View();
     }
 
-    public IActionResult RegisterProfile()
+    [HttpPost("register-password")]
+    public async Task<IActionResult> RegisterPassword(RegisterPasswordForm form, CancellationToken ct)
     {
-        return View();
+        if (!ModelState.IsValid)
+            return View(new RegisterPasswordVM { Form = form });
+
+
+        var email = HttpContext.Session.GetString("Auth.SignUp.Email");
+        if (string.IsNullOrWhiteSpace(email))
+            return RedirectToAction(nameof(SignUp));
+
+
+        var guid = await memberService.RegisterMemberAsync(email, form.Password, ct);
+        if (guid == Guid.Empty )
+        {
+            //Fel meddalnde 
+            return View(new RegisterPasswordVM { Form = form });
+        }
+
+        await authService.SignInAsync(guid);
+
+        HttpContext.Session.Remove("Auth.SignUp.Email");
+
+        return RedirectToAction("My", "Account");
+
     }
+
+   
+    #endregion
 }

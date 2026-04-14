@@ -16,7 +16,6 @@
     <Folder Include="Common\" />
     <Folder Include="Dtos\" />
     <Folder Include="Mappers\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>

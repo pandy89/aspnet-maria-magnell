@@ -3,3 +3,13 @@
 *@
 @{
 }
+
+@model string 
+
+
+<h1>@Model</h1>
+
+
+<form asp-controller="Authentication" asp-action="SignOut" method="post" novalidate>
+    <button type="submit">Sign Out</button>
+</form>
