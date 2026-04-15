@@ -2389,3 +2389,10 @@ footer {
 .accept-terms{
     padding-top: 3rem;
 }
+
+/* Validation */
+.field-validation-error{
+   padding-top:5px;
+   padding-left: 5px;
+   color: var(--danger-color);
+}

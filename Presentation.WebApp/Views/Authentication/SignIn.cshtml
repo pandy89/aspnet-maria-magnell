@@ -1,12 +1,17 @@
-﻿@{
+﻿@using Presentation.WebApp.ViewModels
+@{
     Layout = "Layouts/_AuthLayout";
+
+    //Title on the page
+    ViewData["Title"] = "Sign In";
 }
+@model SignInVM
 
 <section class="section__sign-in">
     <div class="container">
         <div class="sign-in-area">
             <div class="sign-in-content">
-                <h2>Welcome Back</h2>
+                <h2>Welcome Back!</h2>
                 <p>Log in to continue your fitness journey with full access to your customized program, training history, and progress tracking. Stay consistent, monitor your development, and keep moving forward with the structure and support built into your account.</p>
                 <hr />
                 <div class="sign-in-external-login">
@@ -15,20 +20,22 @@
                     <span>OR CONTINUE WITH</span>
                 </div>
                 <div class="sign-in-form-area">
-                    <form class="sign-in-form-container" novalidate>
+                    <form asp-controller="Authentication" asp-action="SignIn" method="post" class="sign-in-form-container" novalidate>
                         <div class="sign-in-form-group">
-                            <label class="sign-in-form-label required" for="name" required>Email Address</label>
-                            <input class="sign-in-form-input" type="text" id="name" name="name" placeholder="Enter First Name" required>
+                            <label class="sign-in-form-label" asp-for="@Model.Form.Email" required">Email Address</label>
+                            <input class="sign-in-form-input" asp-for="@Model.Form.Email" />
+                            <span asp-validation-for="@Model.Form.Email"></span>
                         </div>
                         <div class="sign-in-form-group">
-                            <label class="sign-in-form-label" for="name">Password</label>
-                            <input class="sign-in-form-input" type="text" id="name" name="name" placeholder="Enter Password" required>
+                            <label class="sign-in-form-label" asp-for="@Model.Form.Password">Password</label>
+                            <input class="sign-in-form-input" asp-for="@Model.Form.Password" />
+                            <span asp-validation-for="@Model.Form.Password"></span>
                         </div>
-                        <a href="#" class="sign-in-link">Forgot your password?</a>
+                        <a href="#" class="sign-in-link">Forgot your password?</a>     
                         <div class="sign-in-block">
-                            <button class="btn btn--primary btn--icon sign-in-block-button">Continue</button>
+                            <button class="btn btn--primary btn--icon sign-in-block-button" type="submit">Continue</button>
                             <div class="sign-in-form-group">
-                                <label for="" class=""><input type="checkbox" id="" name="" value="" class="form-checkbox" />Accept user terms and conditions</label>
+                                <label><input type="checkbox" class="form-checkbox">Accept user terms and conditions</label>
                             </div>
                         </div>
                     </form>

@@ -3,7 +3,6 @@
 public class MemberEntity
 {
     public Guid Id { get; private set; }
-    //public string IdentityId { get; private set; } = null!;
     public string? FirstName { get; private set; }
     public string? LastName { get; private set; }
     public string? PhoneNumber {  get; private set; }
@@ -13,13 +12,9 @@ public class MemberEntity
     public bool IsDeleted { get; private set; }
     public byte[] RowVersion { get; private set; } = [];
 
-    // Koppling till MembershipId
-
-
+    //TODO: Koppling till MembershipId
 
     private MemberEntity() {}
-
-
 
     private MemberEntity(Guid id)
     {

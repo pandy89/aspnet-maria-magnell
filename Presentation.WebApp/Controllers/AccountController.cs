@@ -8,9 +8,7 @@ public class AccountController : Controller
 {
     public IActionResult My()
     {
-
         var email = User.Identity?.Name ?? string.Empty;
-
 
         return View("My", email);
     }

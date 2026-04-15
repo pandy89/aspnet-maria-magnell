@@ -8,10 +8,6 @@ namespace Presentation.WebApp.Controllers;
 
 public class AuthenticationController(IMemberService memberService, IAuthService authService) : Controller
 {
-    
-   
-
-
     public IActionResult SignIn()
     {
         return View();
@@ -23,7 +19,6 @@ public class AuthenticationController(IMemberService memberService, IAuthService
         await authService.SignOutAsync();
         return RedirectToAction("Index", "Home");
     }
-
 
     #region SignUp
 
@@ -46,17 +41,12 @@ public class AuthenticationController(IMemberService memberService, IAuthService
 
         HttpContext.Session.SetString("Auth.SignUp.Email", form.Email);
 
-
-        return RedirectToAction(nameof(RegisterPassword));
-
-        
+        return RedirectToAction(nameof(RegisterPassword));        
     }
 
     [HttpGet("register-password")]
     public IActionResult RegisterPassword()
     {
-
-
         return View();
     }
 
@@ -66,16 +56,14 @@ public class AuthenticationController(IMemberService memberService, IAuthService
         if (!ModelState.IsValid)
             return View(new RegisterPasswordVM { Form = form });
 
-
         var email = HttpContext.Session.GetString("Auth.SignUp.Email");
         if (string.IsNullOrWhiteSpace(email))
             return RedirectToAction(nameof(SignUp));
 
-
         var guid = await memberService.RegisterMemberAsync(email, form.Password, ct);
         if (guid == Guid.Empty )
         {
-            //Fel meddalnde 
+            //TODO: Fel meddelande 
             return View(new RegisterPasswordVM { Form = form });
         }
 
