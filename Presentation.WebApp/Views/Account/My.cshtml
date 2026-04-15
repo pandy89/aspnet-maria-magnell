@@ -1,4 +1,5 @@
-﻿@*
+﻿@using Presentation.WebApp.Models
+@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
@@ -15,9 +16,9 @@
                 <div class="my-account-menu">
                     <h3>Menu Options</h3>
                     <ul class="my-account-menu-list">
-                        <li class="my-account-menu-list-item"><a href="#" class="my-account-menu-list-item-link">About Me</a></li>
-                        <li class="my-account-menu-list-item"><a href="#" class="my-account-menu-list-item-link">My Membership</a></li>
-                        <li class="my-account-menu-list-item"><a href="#" class="my-account-menu-list-item-link">My Bookings</a></li>                    
+                        <li class="my-account-menu-list-item"><a asp-controller="Account" asp-action="My" class="my-account-menu-list-item-link">About Me</a></li>
+                        <li class="my-account-menu-list-item"><a asp-controller="Account" asp-action="My" class="my-account-menu-list-item-link">My Membership</a></li>
+                        <li class="my-account-menu-list-item"><a asp-controller="Account" asp-action="My" class="my-account-menu-list-item-link">My Bookings</a></li>
                         <form class="my-account-menu-list-item-last" asp-controller="Authentication" asp-action="SignOut" method="post" novalidate>
                             <button class="btn btn--sign-out btn--icon" type="submit">Sign Out</button>
                         </form>
@@ -28,7 +29,9 @@
                     <a class="remove-account" href="#">Remove Account</a>
                 </div>
             </div>
-                
+            
+            
+            <!-- TODO: Move About Me to partial -->  
             <div class="my-account-section-right">
                 <div class="my-account-section-top">
                     <h2 class="my-account-about-me">About Me</h2>
@@ -43,8 +46,8 @@
                             <input class="my-account-form-input" type="text" id="name" name="name" placeholder="Enter Last Name" required>
                         </div>
                         <div class="my-account-form-group">
-                            <label class="my-account-form-label required" for="name" required>Emil Address</label>
-                            <input class="my-account-form-input" type="text" id="name" name="name" placeholder="Enter Email Address" required>
+                            <label class="my-account-form-label required" required>Emil Address</label>
+                            <input class="my-account-form-input"  placeholder="Enter Email Address" required>
                         </div>
                         <div class="my-account-form-group">
                             <label class="my-account-form-label" for="name">Phone Number</label>

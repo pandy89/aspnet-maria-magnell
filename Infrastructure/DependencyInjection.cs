@@ -36,7 +36,6 @@ public static class DependencyInjection
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("LocalDbFile")));
         }
 
-
         services.AddScoped<IMemberRepo, MemberRepo>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IAuthService, IdentityAuthService>();

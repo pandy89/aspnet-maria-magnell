@@ -1,12 +1,10 @@
 ﻿using Presentation.WebApp.Models;
 
-namespace Presentation.WebApp.ViewModels
+namespace Presentation.WebApp.ViewModels;
+
+public class SignUpVM
 {
-    public class SignUpVM
-    {
-        public SignUpForm Form { get; set; } = new();
+    public SignUpForm Form { get; set; } = new();
 
-
-        //external providers 
-    }
+    //external providers 
 }
