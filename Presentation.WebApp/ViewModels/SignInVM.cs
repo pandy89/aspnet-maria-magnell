@@ -4,5 +4,6 @@ namespace Presentation.WebApp.ViewModels;
 
 public class SignInVM
 {
-    public SignInForm Form { get; set; } = new();
+    public string? ReturnUrl { get; set; }
+    public List<string> ExternalProviders { get; set; } = [];
 }

@@ -1,0 +1,28 @@
+﻿@using Presentation.WebApp.ViewModels
+@model VerifyExternalLoginVM
+
+<section class="section__sign-in">
+    <div class="container">
+        <div class="sign-in-area">
+            <div class="sign-in-content">
+                <h2>Verify you email</h2>
+                <p>A verification code has been sent to <strong>@Model.Email</strong>. Enter the code below to continue.</p>
+                <p>Demo code: <strong>123456</strong></p>
+                <hr />
+                <form asp-controller="Authentication" asp-action="VerifyExternalLogin" method="post">
+                    <input asp-for="Email" type="hidden" />
+                    <input asp-for="ReturnUrl" type="hidden" />
+
+                    <label asp-for="Code">Verification code:</label>
+                    <input asp-for="Code" />
+                    <span asp-validation-for="Code"></span>
+
+                    <p>By verifying, you agree to our 
+                    <a href="/terms">terms of service</a> and <a href="/privacy">privacy policy</a>
+                    </p>
+                    <button class="btn btn--primary btn--icon continue-block-button" type="submit">Verify</button>
+                </form>  
+            </div>
+        </div>
+    </div>
+</section>
