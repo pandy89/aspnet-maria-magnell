@@ -1,16 +1,32 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Interfaces;
+using Infrastructure.Identity;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using Presentation.WebApp.Models;
 using Presentation.WebApp.ViewModels;
+using System.Security.Claims;
 
 namespace Presentation.WebApp.Controllers;
 
-public class AuthenticationController(IMemberService memberService, IAuthService authService) : Controller
+public class AuthenticationController(IMemberService memberService, IAuthService authService, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ILogger<AuthenticationController> logger) : Controller
 {
-    public IActionResult SignIn()
+
+    //Generera SignIn vy och hämtar ut vilka External providers vi har och visar dem på vår signin vy. 
+    [HttpGet]
+    public async Task<IActionResult> SignIn(string? returnUrl = null)
     {
-        return View();
+        var schemes = await signInManager.GetExternalAuthenticationSchemesAsync();
+
+        var vm = new SignInVM
+        {
+            ReturnUrl = returnUrl,
+            ExternalProviders = [.. schemes.Select(x => x.Name)]
+        };
+
+        return View(vm);
     }
 
     [HttpPost, ValidateAntiForgeryToken]
@@ -19,6 +35,194 @@ public class AuthenticationController(IMemberService memberService, IAuthService
         await authService.SignOutAsync();
         return RedirectToAction("Index", "Home");
     }
+
+    //Startar den externa providern och skickar oss respektive provider
+
+    [HttpPost, ValidateAntiForgeryToken] // ValidateAntiForgeryToken = skyddar mot postanrop, säkerstälker att anropen kommer ifrån vår egna sida och inte är scriptattack från en annan flik i webbläsaren.  
+    public IActionResult ExternalLogin(string provider, string? returnUrl = null)
+    {
+        if (string.IsNullOrWhiteSpace(provider))
+            return RedirectToAction(nameof(SignIn), new { returnUrl });
+
+        var redirectUrl = Url.Action(nameof(ExternalLoginCallback), "Authentication", new { returnUrl });
+        var properties = signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+
+        return Challenge(properties, provider);
+    }
+
+    // Vi kommer tillbaka och hämtar info från providern. Berode på om vi har ett konto så loggas vi in direkt annars görs en verifiering. 
+
+    [HttpGet]
+    public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null, string? remoteError = null)
+    {
+        if (remoteError is not null)
+        {
+            logger.LogWarning("Remote error from provider: {Error}", remoteError);
+            return ExternalLoginFailed(returnUrl);
+        }
+
+        var externalUser = await GetExternalUserInfo();
+        if (externalUser is null)
+            return ExternalLoginFailed(returnUrl);
+
+        var (info, email) = externalUser.Value;
+
+        //kolla ifall befintlig användare finns i systemet, finns en sparad koppling?
+        var result = await signInManager.ExternalLoginSignInAsync
+        (
+            info.LoginProvider,
+            info.ProviderKey,
+            isPersistent: false,
+            bypassTwoFactor: true
+        );
+
+        if (result.Succeeded)
+            return RedirectToLocal(returnUrl);
+
+        // Hantera lockOut
+
+        return await ExternalVerfication(email, returnUrl);
+
+    }
+
+    private async Task<IActionResult> ExternalVerfication(string email, string? returnUrl = null)
+    {
+        // TODO: Generea engångskod, spara i cb/cache, skicka via email.
+
+        return View("VerifyExternalLogin", new VerifyExternalLoginVM
+        {
+            ReturnUrl = returnUrl,
+            Email = email
+        });
+    }
+
+#if DEBUG
+    [HttpGet]
+    public IActionResult TestVerifyExternalLogin()
+    {
+        return View("VerifyExternalLogin", new VerifyExternalLoginVM
+        {
+            Email = "test@domain.com",
+            ReturnUrl = "/"
+        });
+    }
+#endif
+
+    // Vi verifiera oss och berode om det är finns ett lokalt kontot så kopplas vi ihop med det annars skapar vi en ny external user.
+
+    [HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> VerifyExternalLogin(VerifyExternalLoginVM vm)
+    {
+        if (!ModelState.IsValid)
+            return View("VerifyExternalLogin", vm);
+
+        // TODO: Validera koden mot db/cache
+
+        if(!string.Equals(vm.Code, "123456", StringComparison.Ordinal))
+        {
+            ModelState.AddModelError(nameof(vm.Code), "Fel kod.");
+            return View("VerifyExternalLogin", vm);
+        }
+
+        var externalUser = await GetExternalUserInfo();
+        if (externalUser is null)
+            return ExternalLoginFailed(vm.ReturnUrl);
+
+        var (info, email) = externalUser.Value;
+
+        var existingUser = await userManager.FindByEmailAsync(email);
+        if (existingUser is not null)
+            return await LinkExistingUser(existingUser, info, vm.ReturnUrl);
+
+        return await CreateExternalUser(email, info, vm.ReturnUrl);
+    }
+
+    // Länkar ihop lokalt konto med external
+    private async Task<IActionResult> LinkExistingUser(ApplicationUser user, ExternalLoginInfo info, string? returnUrl = null)
+    {
+        var result = await userManager.AddLoginAsync(user, info);
+        if (!result.Succeeded)
+        {
+            logger.LogError("Failed to link {Provider} to {Email} : {Errors}",
+                info.LoginProvider,
+                user.Email,
+                string.Join(",", result.Errors.Select(x => x.Description))
+             );
+
+            return ExternalLoginFailed(returnUrl);
+        }
+        await signInManager.SignInAsync(user, isPersistent: false);
+        return RedirectToLocal(returnUrl);
+    }
+
+    // Skapar en ny external user.
+    private async Task<IActionResult> CreateExternalUser(string email, ExternalLoginInfo info, string?  returnUrl = null)
+    {
+        var user = new ApplicationUser
+        {
+            UserName = email,
+            Email = email,
+            EmailConfirmed = true
+        };
+
+        var createResult = await userManager.CreateAsync(user);
+        if (!createResult.Succeeded)
+        {
+            logger.LogError("Failed to create user {Email} : {Error}",
+                email,
+                string.Join(",", createResult.Errors.Select(x => x.Description))
+            );
+
+            return ExternalLoginFailed(returnUrl);
+
+        }
+        var linkResult = await userManager.AddLoginAsync(user, info);
+        if (!linkResult.Succeeded)
+        {
+            logger.LogError("Failed to link {Provider} to {Email} : {Errors}",
+                info.LoginProvider,
+                user.Email,
+                string.Join(",", linkResult.Errors.Select(x => x.Description))
+             );
+
+            return ExternalLoginFailed(returnUrl);
+        }
+
+        await signInManager.SignInAsync(user, isPersistent: false);
+        return RedirectToLocal(returnUrl);
+    }
+    private async Task<(ExternalLoginInfo Info, string Email)?> GetExternalUserInfo()
+    {
+        var info = await signInManager.GetExternalLoginInfoAsync();
+        if (info is null)
+        {
+            logger.LogWarning("External login info was null");
+            return null;
+        }
+
+        var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            logger.LogWarning("No email claim from {Provider}", info.LoginProvider);
+            return null;
+        }
+        return (info, email);
+    }
+
+    private RedirectToActionResult ExternalLoginFailed(string? returnUrl = null)
+    {
+        TempData["Error"] = "Inloggningen misslyckades, försök igen.";
+        return RedirectToAction(nameof(SignIn), new { returnUrl }); 
+    }
+
+    private IActionResult RedirectToLocal(string? returnUrl = null)
+    {
+        if (Url.IsLocalUrl(returnUrl))
+            return Redirect(returnUrl);
+
+        return RedirectToAction("Index", "Home");
+    }
+
 
     #region SignUp
 
@@ -73,8 +277,6 @@ public class AuthenticationController(IMemberService memberService, IAuthService
 
         return RedirectToAction("My", "Account");
 
-    }
-
-   
+    }   
     #endregion
 }
