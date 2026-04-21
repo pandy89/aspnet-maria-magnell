@@ -1,10 +1,8 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Interfaces;
 using Infrastructure.Identity;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
 using Presentation.WebApp.Models;
 using Presentation.WebApp.ViewModels;
 using System.Security.Claims;
@@ -14,7 +12,7 @@ namespace Presentation.WebApp.Controllers;
 public class AuthenticationController(IMemberService memberService, IAuthService authService, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, ILogger<AuthenticationController> logger) : Controller
 {
 
-    //Generera SignIn vy och hämtar ut vilka External providers vi har och visar dem på vår signin vy. 
+    //Generera SignIn-vy,hämtar ut vilka External providers vi har, visar dem på vår Signin-vy. 
     [HttpGet]
     public async Task<IActionResult> SignIn(string? returnUrl = null)
     {
@@ -29,16 +27,16 @@ public class AuthenticationController(IMemberService memberService, IAuthService
         return View(vm);
     }
 
-    [HttpPost, ValidateAntiForgeryToken]
+    [HttpPost, ValidateAntiForgeryToken] // ValidateAntiForgeryToken = skyddar mot postanrop, säkerställer att anropen kommer ifrån vår egna sida och inte är scriptattack från en annan flik i webbläsaren. 
     public new async Task<IActionResult> SignOut()
     {
         await authService.SignOutAsync();
         return RedirectToAction("Index", "Home");
     }
 
-    //Startar den externa providern och skickar oss respektive provider
+    //Startar den externa providern och skickar oss till respektive provider.
 
-    [HttpPost, ValidateAntiForgeryToken] // ValidateAntiForgeryToken = skyddar mot postanrop, säkerstälker att anropen kommer ifrån vår egna sida och inte är scriptattack från en annan flik i webbläsaren.  
+    [HttpPost, ValidateAntiForgeryToken]  
     public IActionResult ExternalLogin(string provider, string? returnUrl = null)
     {
         if (string.IsNullOrWhiteSpace(provider))
@@ -50,7 +48,7 @@ public class AuthenticationController(IMemberService memberService, IAuthService
         return Challenge(properties, provider);
     }
 
-    // Vi kommer tillbaka och hämtar info från providern. Berode på om vi har ett konto så loggas vi in direkt annars görs en verifiering. 
+    // Vi kommer tillbaka till vår sida, hämtar info från providern. Beronde på om vi har ett lokalt konto så loggas vi in direkt, annars görs en verifiering. 
 
     [HttpGet]
     public async Task<IActionResult> ExternalLoginCallback(string? returnUrl = null, string? remoteError = null)
@@ -67,7 +65,7 @@ public class AuthenticationController(IMemberService memberService, IAuthService
 
         var (info, email) = externalUser.Value;
 
-        //kolla ifall befintlig användare finns i systemet, finns en sparad koppling?
+        //Kolla ifall befintlig användare finns i systemet, finns en sparad koppling?
         var result = await signInManager.ExternalLoginSignInAsync
         (
             info.LoginProvider,
@@ -79,10 +77,9 @@ public class AuthenticationController(IMemberService memberService, IAuthService
         if (result.Succeeded)
             return RedirectToLocal(returnUrl);
 
-        // Hantera lockOut
+        // TODO: Hantera lockOut
 
         return await ExternalVerfication(email, returnUrl);
-
     }
 
     private async Task<IActionResult> ExternalVerfication(string email, string? returnUrl = null)
@@ -108,7 +105,7 @@ public class AuthenticationController(IMemberService memberService, IAuthService
     }
 #endif
 
-    // Vi verifiera oss och berode om det är finns ett lokalt kontot så kopplas vi ihop med det annars skapar vi en ny external user.
+    // Vi verifiera oss och beronde om det är finns ett lokalt kontot så kopplas vi ihop med det lokala kontot annars skapar vi en ny external user.
 
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> VerifyExternalLogin(VerifyExternalLoginVM vm)
@@ -137,7 +134,7 @@ public class AuthenticationController(IMemberService memberService, IAuthService
         return await CreateExternalUser(email, info, vm.ReturnUrl);
     }
 
-    // Länkar ihop lokalt konto med external
+    // Länkar ihop lokalt konto med external.
     private async Task<IActionResult> LinkExistingUser(ApplicationUser user, ExternalLoginInfo info, string? returnUrl = null)
     {
         var result = await userManager.AddLoginAsync(user, info);

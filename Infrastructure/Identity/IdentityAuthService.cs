@@ -24,8 +24,6 @@ public class IdentityAuthService(UserManager<ApplicationUser> userManager, SignI
             return Guid.Empty;
 
         return user.Id;
-            
-
     }
 
     public async Task<bool> EmailExistsAsync(string email)

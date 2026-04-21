@@ -2289,3 +2289,11 @@ footer {
    padding-left: 5px;
    color: var(--danger-color);
 }
+
+
+/*External providers*/
+
+.external-providers-box{
+    display:flex;
+    gap: 1rem;
+}
