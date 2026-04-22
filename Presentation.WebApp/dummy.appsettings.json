@@ -11,7 +11,7 @@
   },
   "Authentication": {
     "Google": {
-      "ClientId": " Replace with your ClientId",
+      "ClientId": "Replace with your ClientId",
       "ClientSecret": "Replace with your ClientSecret"
     },
     "GitHub": {
