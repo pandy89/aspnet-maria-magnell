@@ -14,8 +14,6 @@ builder.Services.AddRouting(options =>
 });
 builder.Services.AddControllersWithViews();
 
-//builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("LocalDbFile")));
-
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
 {
     //Konfig
@@ -73,6 +71,9 @@ if(!app.Environment.IsDevelopment())
 app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+
 app.UseRouting();
 
 app.UseSession();
@@ -93,6 +94,7 @@ if (app.Environment.IsDevelopment())
     var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
     await context.Database.EnsureCreatedAsync();
+    //await context.Database.MigrateAsync();
 }
 
 app.Run();

@@ -8,8 +8,9 @@ namespace Application.Abstractions.Authentication
     {
         Task<bool> EmailExistsAsync(string email);
         Task<Guid> CreateUserAsync(string email, string password);
-
         Task<bool> SignInAsync(Guid id);
+
+        Task<bool> SignInWithPasswordAsync(string email, string password);
 
         Task SignOutAsync();
     }

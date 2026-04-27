@@ -1,8 +1,5 @@
 ﻿using Application.Abstractions.Authentication;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Infrastructure.Identity;
 
@@ -10,13 +7,18 @@ public class IdentityAuthService(UserManager<ApplicationUser> userManager, SignI
 {
     public async Task<Guid> CreateUserAsync(string email, string password)
     {
-        //TODO: checka så email och password finns
+        if (string.IsNullOrWhiteSpace(email))
+            throw new ArgumentException("Email is requied", nameof(email));
+
+        if (string.IsNullOrWhiteSpace(password))
+            throw new ArgumentException("Password is requied", nameof(password));
 
         var user = new ApplicationUser
         {   
             Id = Guid.NewGuid(),
             UserName = email,
-            Email = email
+            Email = email,
+            EmailConfirmed = true
         };
 
         var result = await userManager.CreateAsync(user, password);
@@ -31,7 +33,6 @@ public class IdentityAuthService(UserManager<ApplicationUser> userManager, SignI
         return await userManager.FindByEmailAsync(email) is not null;
     }
 
-
     public async Task<bool> SignInAsync(Guid id)
     {
         var user = await userManager.FindByIdAsync(id.ToString());
@@ -42,6 +43,16 @@ public class IdentityAuthService(UserManager<ApplicationUser> userManager, SignI
         return true;
     }
 
+    public async Task<bool> SignInWithPasswordAsync(string email, string password)
+    {
+
+       
+
+        var result = await signInManager.PasswordSignInAsync(email, password, false, false);
+        return result.Succeeded;
+
+
+    }
 
     public async Task SignOutAsync()
         => await signInManager.SignOutAsync();
