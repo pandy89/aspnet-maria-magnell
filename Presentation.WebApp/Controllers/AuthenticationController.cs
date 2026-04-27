@@ -27,6 +27,52 @@ public class AuthenticationController(IMemberService memberService, IAuthService
         return View(vm);
     }
 
+    [HttpPost]
+    public async Task<IActionResult> SignIn(SignInForm form, string? returnUrl = null)
+    {
+        if (!ModelState.IsValid)
+        {
+            var schemes = await signInManager.GetExternalAuthenticationSchemesAsync();
+
+            var vm = new SignInVM
+            {
+                ReturnUrl = returnUrl,
+                ExternalProviders = [.. schemes.Select(x => x.Name)],
+                Form = form
+            };
+
+            return View(vm);
+        }
+
+       
+
+        var result = await authService.SignInWithPasswordAsync(form.Email, form.Password);
+        if (!result) 
+        {
+            TempData["Error"] = "Incorrect email or password";
+
+            var schemes = await signInManager.GetExternalAuthenticationSchemesAsync();
+
+            var vm = new SignInVM
+            {
+                ReturnUrl = returnUrl,
+                ExternalProviders = [.. schemes.Select(x => x.Name)],
+                Form = form
+            };
+
+            return View(vm);
+
+        }
+
+
+        return RedirectToAction("My", "Account");
+        
+
+
+
+
+    }
+
     [HttpPost, ValidateAntiForgeryToken] // ValidateAntiForgeryToken = skyddar mot postanrop, säkerställer att anropen kommer ifrån vår egna sida och inte är scriptattack från en annan flik i webbläsaren. 
     public new async Task<IActionResult> SignOut()
     {
@@ -84,7 +130,7 @@ public class AuthenticationController(IMemberService memberService, IAuthService
 
     private async Task<IActionResult> ExternalVerfication(string email, string? returnUrl = null)
     {
-        // TODO: Generea engångskod, spara i cb/cache, skicka via email.
+        // TODO: Generea engångskod, spara i db/cache, skicka via email.
 
         return View("VerifyExternalLogin", new VerifyExternalLoginVM
         {

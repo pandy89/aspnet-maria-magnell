@@ -38,17 +38,18 @@
                 <div class="divider">
                     <span>OR CONTINUE WITH</span>
                 </div>
+                @* TODO: Formfunctions  *@
                 <div class="sign-in-form-area">
                     <form asp-controller="Authentication" asp-action="SignIn" method="post" class="sign-in-form-container" novalidate>
                         <div class="sign-in-form-group">
-                            <label class="sign-in-form-label" required">Email Address</label>
-                            <input class="sign-in-form-input" />
-                            <span></span>
+                            <label asp-for="@Model.Form.Email" class="sign-in-form-label" required">Email Address</label>
+                            <input asp-for="@Model.Form.Email" class="sign-in-form-input" />
+                            <span asp-validation-for="@Model.Form.Email"></span>
                         </div>
                         <div class="sign-in-form-group">
-                            <label class="sign-in-form-label" >Password</label>
-                            <input class="sign-in-form-input"  />
-                            <span></span>
+                            <label asp-for="@Model.Form.Password" class="sign-in-form-label" >Password</label>
+                            <input asp-for="@Model.Form.Password" class="sign-in-form-input"  />
+                            <span asp-validation-for="@Model.Form.Password"></span>
                         </div>
                         <a href="#" class="sign-in-link">Forgot your password?</a>     
                         <div class="sign-in-block">
