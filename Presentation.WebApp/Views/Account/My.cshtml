@@ -1,10 +1,6 @@
 ﻿@using Presentation.WebApp.Models
-@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
 @{
 }
-
 
 <section class="section__my-account">
     <div class="container">
@@ -28,15 +24,14 @@
                     <p class="remove-account-text">If you like to cancel your account click below</p>
                     <a class="remove-account" href="#">Remove Account</a>
                 </div>
-            </div>
+            </div>            
             
-            
-            <!-- TODO: Move About Me to partial -->  
+            <!-- TODO: Move "About Me" to partial -->  
             <div class="my-account-section-right">
                 <div class="my-account-section-top">
                     <h2 class="my-account-about-me">About Me</h2>
                     <hr class="my-account-hr1" />
-                    <form class="my-account-form-container" novalidate>
+                    <form method="post" class="my-account-form-container" novalidate>
                         <div class="my-account-form-group">
                             <label class="my-account-form-label" for="name">First Name</label>
                             <input class="my-account-form-input" type="text" id="name" name="name" placeholder="Enter First Name" required>
@@ -46,8 +41,8 @@
                             <input class="my-account-form-input" type="text" id="name" name="name" placeholder="Enter Last Name" required>
                         </div>
                         <div class="my-account-form-group">
-                            <label class="my-account-form-label required" required>Emil Address</label>
-                            <input class="my-account-form-input"  placeholder="Enter Email Address" required>
+                            <label class="my-account-form-label">Email Address</label>
+                            <input class="my-account-form-input" placeholder="Enter Email Address" required>
                         </div>
                         <div class="my-account-form-group">
                             <label class="my-account-form-label" for="name">Phone Number</label>
