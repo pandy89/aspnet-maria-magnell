@@ -43,19 +43,9 @@ public class MemberService(IAuthService authService, IMemberRepo memberRepo, IUn
         return true;
     }
 
-    //public async Task<bool> DeleteMemberAsync(Guid userId, CancellationToken ct = default)
-    //{
-    //    var member = await memberRepo.GetByIdAsync(userId, ct);
-    //    if (member is null)
-    //        return false;
 
-    //    var authDeleted = await authService.DeleteUserAsync(userId);
-    //    if (!authDeleted)
-    //        return false;
-
-    //    await memberRepo.DeleteAsync(member, ct);
-    //    await uow.SaveChangesAsync(ct);
-
-    //    return true;
-    //}
+    public async Task<MemberEntity> GetMemberByIdAsync(Guid userId, CancellationToken ct = default)
+    {
+        return await memberRepo.GetByIdAsync(userId, ct);
+    }
 }
