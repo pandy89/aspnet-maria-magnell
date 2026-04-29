@@ -9,7 +9,6 @@ namespace Application.Services
     {
         public async Task<Guid> RegisterMemberAsync(string email, string password, CancellationToken ct = default)
         {
-            
             var emailExists = await authService.EmailExistsAsync(email);
             if (emailExists)
                 return Guid.Empty;
@@ -29,6 +28,33 @@ namespace Application.Services
             {
                 throw;
             }
+        }
+
+        public async Task<bool> UpdateMemberAsync(Guid userId, string firstName, string lastName, string phoneNumber, CancellationToken ct = default)
+        {
+            var member = await memberRepo.GetByIdAsync(userId, ct);
+            if (member is null)
+                return false;
+
+            member.UpdateNames(firstName, lastName, phoneNumber);
+
+            await memberRepo.UpdateUser(member);
+            await uow.SaveChangesAsync(ct);
+
+            return true;
+        }
+
+        public async Task<bool> DeleteMemberAsync(Guid userId, CancellationToken ct = default)
+        {
+            var member = await memberRepo.GetByIdAsync(userId, ct);
+            if (member is null)
+                return false;
+
+            member.Delete();
+            await memberRepo.DeleteUser(member);
+            await uow.SaveChangesAsync(ct);
+
+            return true;
         }
     }
 }

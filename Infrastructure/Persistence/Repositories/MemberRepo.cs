@@ -10,4 +10,14 @@ public class MemberRepo(ApplicationDbContext context) : IMemberRepo
         context.Members.Add(entity);
         return Task.CompletedTask;
     }
+
+    public Task UpdateUser(MemberEntity entity)
+    {
+        context.Members.Update(entity);
+    }
+
+    public Task DeleteUser(MemberEntity entity)
+    {
+        context.Members.Remove(entity);
+    }
 }

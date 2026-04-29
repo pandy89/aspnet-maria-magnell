@@ -22,11 +22,27 @@ public class MemberEntity
             throw new ArgumentNullException("Ogiltigt id.");
 
         Id = id;
+        CreatedAt = DateTime.Now;
+        ModifiedAt = DateTime.Now;
     }
 
     public static MemberEntity Create(Guid id)
     {
         return new MemberEntity(id);
+    }
+
+    public void UpdateMember(string firstName, string lastName, string phoneNumber)
+    {
+        FirstName = firstName;
+        LastName = lastName;
+        PhoneNumber = phoneNumber;
+        ModifiedAt = DateTime.Now;
+    }
+
+    public void DeleteMember()
+    {
+        IsDeleted = true;
+        ModifiedAt = DateTime.Now;
     }
 
 }

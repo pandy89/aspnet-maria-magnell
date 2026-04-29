@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Presentation.WebApp.Controllers;
@@ -6,7 +7,7 @@ namespace Presentation.WebApp.Controllers;
 [Authorize]
 public class AccountController : Controller
 {
-    public IActionResult My()
+    public async Task<IActionResult> My()
     {
         var email = User.Identity?.Name ?? string.Empty;
 
