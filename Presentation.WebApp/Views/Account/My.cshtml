@@ -1,6 +1,11 @@
 ﻿@using Presentation.WebApp.Models
+@using Presentation.WebApp.ViewModels
+@using System.Security.Claims
 @{
+
+    var userEmail = User.Claims.Where(c => c.Type == ClaimTypes.Email).Select(c => c.Value).ToList();
 }
+@model UpdateMemberVM
 
 <section class="section__my-account">
     <div class="container">
@@ -22,7 +27,10 @@
                 </div>
                 <div class="remove-account-area">
                     <p class="remove-account-text">If you like to cancel your account click below</p>
-                    <a class="remove-account" href="#">Remove Account</a>
+                    <form asp-controller="Account" asp-action="Delete" method="post" onsubmit="return confirm('Are you sure you want to permanently delete your account? This action cannot be undone.');">
+                        @Html.AntiForgeryToken()
+                        <button class="remove-account btn btn--danger" type="submit">Remove Account</button>
+                    </form>
                 </div>
             </div>            
             
@@ -31,22 +39,23 @@
                 <div class="my-account-section-top">
                     <h2 class="my-account-about-me">About Me</h2>
                     <hr class="my-account-hr1" />
-                    <form method="post" class="my-account-form-container" novalidate>
+                    <form method="post" asp-controll="Account" asp-action="UpdateMember" class="my-account-form-container" novalidate>
                         <div class="my-account-form-group">
-                            <label class="my-account-form-label" for="name">First Name</label>
-                            <input class="my-account-form-input" type="text" id="name" name="name" placeholder="Enter First Name" required>
+                            <label class="my-account-form-label" asp-for="FirstName">First Name</label>
+                            <input class="my-account-form-input" asp-for="FirstName" placeholder="Enter First Name" required>
+                            <span asp-validation-for="FirstName"></span>
                         </div>
                         <div class="my-account-form-group">
-                            <label class="my-account-form-label" for="name">Last Name</label>
-                            <input class="my-account-form-input" type="text" id="name" name="name" placeholder="Enter Last Name" required>
+                            <label class="my-account-form-label" asp-for="LastName">Last Name</label>
+                            <input class="my-account-form-input" asp-for="LastName" placeholder="Enter Last Name" required>
                         </div>
-                        <div class="my-account-form-group">
+                        <div class="my-account-form-group">                            
                             <label class="my-account-form-label">Email Address</label>
-                            <input class="my-account-form-input" placeholder="Enter Email Address" required>
+                            <p class="text-email-form">@User.Identity?.Name</p>                            
                         </div>
                         <div class="my-account-form-group">
-                            <label class="my-account-form-label" for="name">Phone Number</label>
-                            <input class="my-account-form-input" type="text" id="name" name="name" placeholder="Enter Phone Number" required>
+                            <label class="my-account-form-label" asp-for="PhoneNumber">Phone Number</label>
+                            <input class="my-account-form-input" asp-for="PhoneNumber" placeholder="Enter Phone Number" required>
                         </div>
                         <hr class="my-account-hr2" />
                         <!-- I used ChatGPT to make the html and css for the uploaded section of the form. -->

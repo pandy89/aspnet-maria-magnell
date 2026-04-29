@@ -19,7 +19,7 @@ public class MemberEntity
     private MemberEntity(Guid id)
     {
         if (id == Guid.Empty)
-            throw new ArgumentNullException("Ogiltigt id.");
+            throw new ArgumentNullException("Invalid id.", nameof(id));
 
         Id = id;
         CreatedAt = DateTime.Now;
@@ -44,5 +44,4 @@ public class MemberEntity
         IsDeleted = true;
         ModifiedAt = DateTime.Now;
     }
-
 }
