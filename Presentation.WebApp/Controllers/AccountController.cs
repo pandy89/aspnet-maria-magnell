@@ -16,7 +16,18 @@ public class AccountController(IMemberService memberService) : Controller
     {
         var email = User.Identity?.Name ?? string.Empty;
 
-        var vm = new UpdateMemberVM();
+        var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var userId = Guid.Parse(userIdValue!);
+
+        var member = await memberService.GetMemberByIdAsync(userId);        
+
+        var vm = new UpdateMemberVM
+        {
+            FirstName = member?.FirstName ?? string.Empty,
+            LastName = member?.LastName ?? string.Empty,
+            PhoneNumber = member?.PhoneNumber ?? string.Empty
+
+        };
 
         return View("My", vm); // ("My", email)
     }
@@ -52,21 +63,4 @@ public class AccountController(IMemberService memberService) : Controller
 
         return RedirectToAction("My", "Account");           
     }
-
-    //[HttpPost, ValidateAntiForgeryToken]
-    //public async Task<IActionResult> Delete (CancellationToken ct = default)
-    //{
-    //    var userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
-    //    if (string.IsNullOrWhiteSpace(userIdValue))
-    //        return Unauthorized();
-
-    //    var userId = Guid.Parse(userIdValue);
-
-    //    var result = await memberService.DeleteMemberAsync(userId, ct);
-    //    if (!result)
-    //        return BadRequest();
-
-    //    await authService.SignOutAsync();
-    //    return RedirectToAction("Index", "Home");
-    //}
 }

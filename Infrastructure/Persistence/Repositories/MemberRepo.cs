@@ -24,7 +24,9 @@ public class MemberRepo(ApplicationDbContext context) : IMemberRepo
 
     public async Task<MemberEntity?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {
-        return await context.Members
+        var result = await context.Members
             .FirstOrDefaultAsync(x => x.Id == id, ct);
+        return result;
+
     }
 }

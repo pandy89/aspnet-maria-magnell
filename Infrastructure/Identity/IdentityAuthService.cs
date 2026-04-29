@@ -57,13 +57,4 @@ public class IdentityAuthService(UserManager<ApplicationUser> userManager, SignI
     public async Task SignOutAsync()
         => await signInManager.SignOutAsync();
 
-    //public async Task<bool> DeleteUserAsync(Guid id)
-    //{
-    //    var user = await userManager.FindByIdAsync(id.ToString());
-    //    if (user is null)
-    //        return false;
-
-    //    var result = await userManager.DeleteAsync(user);
-    //    return result.Succeeded;
-    //}
 }
