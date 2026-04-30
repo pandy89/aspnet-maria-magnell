@@ -17,10 +17,10 @@ public class MemberRepo(ApplicationDbContext context) : IMemberRepo
         context.Members.Update(entity);
     }
 
-    public void DeleteUser(MemberEntity entity)
-    {
-        context.Members.Remove(entity);
-    }
+    //public void DeleteUser(MemberEntity entity)
+    //{
+    //    context.Members.Remove(entity);
+    //}
 
     public async Task<MemberEntity?> GetByIdAsync(Guid id, CancellationToken ct = default)
     {

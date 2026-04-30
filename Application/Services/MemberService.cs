@@ -18,9 +18,12 @@ public class MemberService(IAuthService authService, IMemberRepo memberRepo, IUn
         {
             var userId = await authService.CreateUserAsync(email, password);
 
-            var result = await CreateMember(userId, ct);
-            if (result)
+            if(userId == Guid.Empty) 
+                return Guid.Empty;
+            var memberCreated = await CreateMember(userId, ct);
+            if (memberCreated)
                 return userId;
+            await authService.DeleteUserAsync(userId);            
 
             return Guid.Empty;
         }
