@@ -42,9 +42,7 @@ public class AuthenticationController(IMemberService memberService, IAuthService
             };
 
             return View(vm);
-        }
-
-       
+        }       
 
         var result = await authService.SignInWithPasswordAsync(form.Email, form.Password);
         if (!result) 
@@ -61,16 +59,9 @@ public class AuthenticationController(IMemberService memberService, IAuthService
             };
 
             return View(vm);
-
         }
 
-
         return RedirectToAction("My", "Account");
-        
-
-
-
-
     }
 
     [HttpPost, ValidateAntiForgeryToken] // ValidateAntiForgeryToken = skyddar mot postanrop, säkerställer att anropen kommer ifrån vår egna sida och inte är scriptattack från en annan flik i webbläsaren. 
@@ -154,7 +145,7 @@ public class AuthenticationController(IMemberService memberService, IAuthService
     // Vi verifiera oss och beronde om det är finns ett lokalt kontot så kopplas vi ihop med det lokala kontot annars skapar vi en ny external user.
 
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task<IActionResult> VerifyExternalLogin(VerifyExternalLoginVM vm)
+    public async Task<IActionResult> VerifyExternalLogin(VerifyExternalLoginVM vm, CancellationToken ct)
     {
         if (!ModelState.IsValid)
             return View("VerifyExternalLogin", vm);
@@ -177,7 +168,7 @@ public class AuthenticationController(IMemberService memberService, IAuthService
         if (existingUser is not null)
             return await LinkExistingUser(existingUser, info, vm.ReturnUrl);
 
-        return await CreateExternalUser(email, info, vm.ReturnUrl);
+        return await CreateExternalUser(email, info, ct, vm.ReturnUrl);
     }
 
     // Länkar ihop lokalt konto med external.
@@ -199,10 +190,11 @@ public class AuthenticationController(IMemberService memberService, IAuthService
     }
 
     // Skapar en ny external user.
-    private async Task<IActionResult> CreateExternalUser(string email, ExternalLoginInfo info, string?  returnUrl = null)
+    private async Task<IActionResult> CreateExternalUser(string email, ExternalLoginInfo info, CancellationToken ct ,string?  returnUrl = null)
     {
         var user = new ApplicationUser
         {
+          
             UserName = email,
             Email = email,
             EmailConfirmed = true
@@ -231,8 +223,15 @@ public class AuthenticationController(IMemberService memberService, IAuthService
             return ExternalLoginFailed(returnUrl);
         }
 
-        await signInManager.SignInAsync(user, isPersistent: false);
-        return RedirectToLocal(returnUrl);
+        var memberResult = await memberService.CreateMember(user.Id, ct);
+        if (memberResult)
+        { 
+            await signInManager.SignInAsync(user, isPersistent: false);
+            return RedirectToLocal(returnUrl);
+        }
+
+        return ExternalLoginFailed(returnUrl);
+
     }
     private async Task<(ExternalLoginInfo Info, string Email)?> GetExternalUserInfo()
     {
@@ -265,7 +264,6 @@ public class AuthenticationController(IMemberService memberService, IAuthService
 
         return RedirectToAction("Index", "Home");
     }
-
 
     #region SignUp
 

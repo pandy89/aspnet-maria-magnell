@@ -27,7 +27,7 @@
                 </div>
                 <div class="remove-account-area">
                     <p class="remove-account-text">If you like to cancel your account click below</p>
-                    <form asp-controller="Account" asp-action="Delete" method="post" onsubmit="return confirm('Are you sure you want to permanently delete your account? This action cannot be undone.');">
+                    <form asp-controller="Account" asp-action="DeleteMember" method="post" onsubmit="return confirm('Are you sure you want to permanently delete your account? This action cannot be undone.');">
                         @Html.AntiForgeryToken()
                         <button class="remove-account btn btn--danger" type="submit">Remove Account</button>
                     </form>

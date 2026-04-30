@@ -18,17 +18,36 @@ public class MemberService(IAuthService authService, IMemberRepo memberRepo, IUn
         {
             var userId = await authService.CreateUserAsync(email, password);
 
+            var result = await CreateMember(userId, ct);
+            if (result)
+                return userId;
+
+            return Guid.Empty;
+        }
+        catch (Exception)
+        {
+            return Guid.Empty;
+        }
+    }
+
+    public async Task<bool> CreateMember(Guid userId, CancellationToken ct = default)
+    {
+        try
+        {
             var user = MemberEntity.Create(userId);
             await memberRepo.CreateUser(user);
             await uow.SaveChangesAsync(ct);
 
-            return userId;
+            return true;
         }
         catch (Exception)
         {
+
             throw;
         }
+       
     }
+
 
     public async Task<bool> UpdateMemberAsync(Guid userId, string firstName, string lastName, string phoneNumber, CancellationToken ct = default)
     {
@@ -48,4 +67,20 @@ public class MemberService(IAuthService authService, IMemberRepo memberRepo, IUn
     {
         return await memberRepo.GetByIdAsync(userId, ct);
     }
+
+    public async Task<bool> DeleteMemberAsync(Guid userId, CancellationToken ct = default)
+    {
+        var member = await memberRepo.GetByIdAsync(userId, ct);
+        if (member is null)
+            return false;
+        var identityDeleted = await authService.DeleteUserAsync(userId);
+        if (!identityDeleted)
+            return false;
+
+        memberRepo.DeleteUser(member);
+        await uow.SaveChangesAsync(ct);
+
+        return true;
+    }
+
 }

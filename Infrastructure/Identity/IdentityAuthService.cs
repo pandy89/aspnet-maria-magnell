@@ -28,6 +28,15 @@ public class IdentityAuthService(UserManager<ApplicationUser> userManager, SignI
         return user.Id;
     }
 
+    public async Task<bool> DeleteUserAsync(Guid userId)
+    {
+        var user = await userManager.FindByIdAsync(userId.ToString());
+        if (user is null)
+            return false;
+        var result = await userManager.DeleteAsync(user);
+        return result.Succeeded;
+    }
+
     public async Task<bool> EmailExistsAsync(string email)
     {
         return await userManager.FindByEmailAsync(email) is not null;
