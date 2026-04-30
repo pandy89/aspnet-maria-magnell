@@ -11,7 +11,6 @@ namespace Application.Abstractions.Authentication
         Task<bool> SignInAsync(Guid id);
         Task<bool> SignInWithPasswordAsync(string email, string password);
         Task SignOutAsync();
-
         Task<bool> DeleteUserAsync(Guid userId);
     }
 }

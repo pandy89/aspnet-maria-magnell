@@ -73,14 +73,10 @@ public class MemberService(IAuthService authService, IMemberRepo memberRepo, IUn
         var member = await memberRepo.GetByIdAsync(userId, ct);
         if (member is null)
             return false;
-        var identityDeleted = await authService.DeleteUserAsync(userId);
-        if (!identityDeleted)
-            return false;
 
-        memberRepo.DeleteUser(member);
-        await uow.SaveChangesAsync(ct);
-
-        return true;
+        var deleted = await authService.DeleteUserAsync(userId);
+        
+        return deleted;
     }
 
 }
